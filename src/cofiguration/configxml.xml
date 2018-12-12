@@ -1,0 +1,10 @@
+
+
+
+<config>
+    <url>jdbc:postgresql://localhost:5432/searchdb</url>
+    <user>postgres</user>
+    <password>1234</password>
+    <threadNumbers>5</threadNumbers>
+    <eager>false</eager>
+</config>
