@@ -44,7 +44,7 @@ TABLESPACE pg_default;
 ALTER TABLE public.url
     OWNER to postgres;
 ```
-##one function for searching 
+## one function for searching 
 
 ```
 CREATE OR REPLACE FUNCTION public.search_bloom(
