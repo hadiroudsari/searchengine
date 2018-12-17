@@ -44,3 +44,46 @@ TABLESPACE pg_default;
 ALTER TABLE public.url
     OWNER to postgres;
 ```
+##one function for searching 
+
+```
+CREATE OR REPLACE FUNCTION public.search_bloom(
+	array1 integer[],
+	frequent integer[])
+    RETURNS TABLE(bloomid integer, bloomfid integer, mini double precision) 
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+    ROWS 1000
+AS $BODY$
+
+ 
+declare
+
+queryString varchar(30000):='SELECT bloomtype.bloomid,bloomtype.bloomfid,  ';
+counter int :=1;
+BEGIN
+while counter <= array_length(array1,1) loop
+queryString:=queryString||' encode(bloomtype.letters[ '|| array1[counter] ||' ],''escape'')::float ' ||' / '||frequent[counter] ;
+
+if counter != array_length(array1,1)
+ then queryString:=queryString ||' +';
+ 
+ end if;
+  
+counter:=counter+1;
+end loop;
+queryString:=queryString|| '   FROM public.bloomtype;';
+RAISE INFO 'information message %', queryString ;
+
+RETURN QUERY execute queryString;
+
+end ; 
+
+$BODY$;
+
+ALTER FUNCTION public.search_bloom(integer[], integer[])
+    OWNER TO postgres;
+
+```
